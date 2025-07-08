@@ -154,13 +154,30 @@ const peopleData = [
 ];
 
 
-// --- SVG ICONS ---
+// --- LOGOS ---
 
-const LogoPlaceholder = ({ className }) => (
-    <div className={`border-2 border-murst-green rounded-full flex items-center justify-center ${className}`}>
-        <span className="font-serif font-bold text-murst-green">M</span>
-    </div>
+const MurstLogo = ({ className }) => (
+    <img src="/MURSTHQ(4096).png" alt="MURST logo" className={className} />
 );
+
+const VibeCheckLogo = ({ className }) => (
+    <img src="/vibelogov2.png" alt="Vibe Check logo" className={className} />
+);
+
+const GemForgeLogo = ({ className }) => (
+    <img src="/Gemforgelogo.png" alt="GemForge logo" className={className} />
+);
+
+const ProjectLogo = ({ projectId, className }) => {
+    switch (projectId) {
+        case 'vibe-check':
+            return <VibeCheckLogo className={className} />;
+        case 'gemforge-mcp':
+            return <GemForgeLogo className={className} />;
+        default:
+            return <MurstLogo className={className} />;
+    }
+};
 
 const GitHubIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-500 group-hover:text-murst-green transition-colors duration-300">
@@ -320,7 +337,7 @@ const Header = ({ onNavClick, isScrolled, onMenuToggle, isMenuOpen }) => {
     return (
         <header className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 sm:px-8 py-4 bg-black/20 backdrop-blur-lg border-b transition-all duration-300 ${isScrolled ? 'border-gray-800 shadow-lg shadow-black/20' : 'border-transparent'}`}>
             <div className="flex items-center gap-4 cursor-pointer group" onClick={() => onNavClick('home')}>
-                <LogoPlaceholder className="w-10 h-10 text-xl group-hover:scale-110 transition-transform duration-300" />
+                <MurstLogo className="w-10 h-10 object-contain group-hover:scale-110 transition-transform duration-300" />
                 <span className="font-serif text-2xl font-bold text-gray-200 hidden sm:block">MURST</span>
             </div>
             <div onClick={onMenuToggle} className="cursor-pointer z-50">
@@ -603,7 +620,7 @@ const ProjectDetail = ({ project, onClose }) => {
                     <div className="max-w-4xl mx-auto p-8 sm:p-12 animate-fade-in" style={{ animationDelay: '300ms' }}>
                         <div className="flex justify-between items-start mb-8">
                             <div className="flex items-center gap-6">
-                                <LogoPlaceholder className="w-20 h-20 text-4xl flex-shrink-0" />
+                                <ProjectLogo projectId={project.id} className="w-20 h-20 flex-shrink-0 object-contain" />
                                 <div>
                                     <h2 className="font-serif text-4xl sm:text-5xl font-bold text-gray-100">{project.title}</h2>
                                     <p className="text-gray-400 mt-2 font-sans text-lg">{project.tagline}</p>
@@ -681,7 +698,6 @@ const GradientBackground = () => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
         let animationFrameId;
-        let time = 0;
 
         const resizeCanvas = () => {
             canvas.width = window.innerWidth;
@@ -696,7 +712,6 @@ const GradientBackground = () => {
         ];
 
         const render = () => {
-            time += 0.002;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             orbs.forEach(orb => {
@@ -736,7 +751,6 @@ const GradientBackground = () => {
 // --- MAIN APP COMPONENT ---
 
 export default function App() {
-    const [activeSection, setActiveSection] = useState('home');
     const [selectedProject, setSelectedProject] = useState(null);
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -756,33 +770,6 @@ export default function App() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    useEffect(() => {
-        const sections = document.querySelectorAll('.section-observer');
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        setActiveSection(entry.target.id);
-                        const underline = entry.target.querySelector('.section-underline');
-                        if (underline) {
-                            underline.style.width = '100%';
-                        }
-                    }
-                });
-            },
-            { rootMargin: '-40% 0px -60% 0px' }
-        );
-
-        sections.forEach(section => {
-            if (section) observer.observe(section);
-        });
-
-        return () => {
-            sections.forEach(section => {
-                if (section) observer.unobserve(section);
-            });
-        };
-    }, []);
     
     useEffect(() => {
         if (selectedProject || isMenuOpen) {
