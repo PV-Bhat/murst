@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { BarChart, Bar, AreaChart, Area, ScatterChart, Scatter, XAxis, YAxis, ZAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LabelList } from 'recharts';
+import { BarChart, Bar, AreaChart, Area, ScatterChart, Scatter, XAxis, YAxis, ZAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LabelList, Cell } from 'recharts';
 
 
 // --- DATA STORE ---
@@ -259,7 +259,7 @@ const HorizontalBarChartComponent = ({ data }) => (
             <Bar dataKey="score">
                 {
                     data.map((entry, index) => (
-                        <Bar key={`cell-${index}`} fill={entry.type === 'MoE' ? '#6AF2A2' : '#737373'} />
+                        <Cell key={`cell-${index}`} fill={entry.type === 'MoE' ? '#6AF2A2' : '#737373'} />
                     ))
                 }
                 <LabelList dataKey="score" position="right" style={{ fill: '#e5e7eb' }} />
