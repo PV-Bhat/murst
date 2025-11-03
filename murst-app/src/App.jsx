@@ -550,12 +550,21 @@ const PeopleCard = ({ person }) => (
                     <p className="font-mono text-murst-green mb-4">{person.role}</p>
                     <p className="text-gray-400 mb-6 font-sans">{person.bio}</p>
                     <div className="flex items-center gap-6">
-                        {person.links.map(link => (
-                            <div key={link.name} className="group flex items-center gap-2 text-sm font-mono text-gray-400">
-                                {link.name === 'GitHub' ? <GitHubIcon /> : <LinkIcon />}
-                                {link.name}
-                            </div>
-                        ))}
+                        {person.links.map(link => {
+                            const isExternal = /^https?:\/\//.test(link.url);
+                            return (
+                                <a
+                                    key={link.name}
+                                    href={link.url}
+                                    className="group flex items-center gap-2 text-sm font-mono text-gray-400"
+                                    target={isExternal ? "_blank" : undefined}
+                                    rel={isExternal ? "noopener noreferrer" : undefined}
+                                >
+                                    {link.name === 'GitHub' ? <GitHubIcon /> : <LinkIcon />}
+                                    {link.name}
+                                </a>
+                            );
+                        })}
                     </div>
                 </div>
             </div>
